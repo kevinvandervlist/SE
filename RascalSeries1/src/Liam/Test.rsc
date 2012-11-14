@@ -1,4 +1,4 @@
-module Test
+module Liam::Test
 
 import lang::java::jdt::Java;
 import lang::java::jdt::JDT;
