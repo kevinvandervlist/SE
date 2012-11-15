@@ -25,8 +25,13 @@ import List;
  * c: The number of <i>actual</i> lines containing a statement in any way.
  * d: A list containing all the line numbers that contain at least one statement. 
  */
+ 
+alias unit = tuple[	loc location, 
+					str name, 
+					int LOC, 
+					list[int] LOCLines];
 
-private tuple[loc, str, int, list[int]] parseUnit(loc location, str name, AstNode body) {
+private unit parseUnit(loc location, str name, AstNode body) {
 	lineset = {location.begin.line};
 
 	visit(body) {
@@ -47,8 +52,16 @@ private tuple[loc, str, int, list[int]] parseUnit(loc location, str name, AstNod
  * 6) int - The number of units in the file
  * 7) set[units] - The set with the units in the file 
  */
+ 
+ alias classUnit = rel[	str name, 
+ 						loc location, 
+ 						int classLOC, 
+ 						list[int] classLOCLines, 
+ 						int totalLOC, 
+ 						int unitCount, 
+ 						rel[loc location, str name, int LOC, list[int] LOCLines] units];
 
-public rel[str, loc, int, list[int], num, int, rel[loc, str, int, list[int]]] getProjectUnitInformation(loc project) {
+public classUnit getProjectUnitInformation(loc project) {
 	asts = createAstsFromProject(project);
 	
 	files = {};
@@ -84,7 +97,7 @@ public rel[str, loc, int, list[int], num, int, rel[loc, str, int, list[int]]] ge
 		s_classloc = sort(classloc);
 		
 		// Create a sum of LOC of all units
-		unitsum = sum([ n | <_, _, int n, _> <- units]);
+		unitsum = toInt(sum([ n | <_, _, int n, _> <- units]));
 		
 		result = <	classname, 
 					x@location, 
@@ -97,7 +110,6 @@ public rel[str, loc, int, list[int], num, int, rel[loc, str, int, list[int]]] ge
 		// Add it to the set of results
 		files += result;
 	}
-
 	return files;
 }
 
@@ -111,3 +123,11 @@ public int getLOCCount(x) {
 	return toInt(sum([ l,u | <_ , _, int l, _, int u, _, _> <- x]));
 }
 
+/*
+ * Return a list consisting of all the lengths of the units
+ * @param The project unit info
+ * @return list[int] with all unit lengths. 
+ */
+public list[int] getUnitSizeList(x) {
+	return [ u.LOC | z <- x<units>, u <- z];
+}
