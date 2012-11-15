@@ -1,6 +1,9 @@
 import Abstract.Foo;
 
 public class Hello {
+	private int a;
+	private int b;
+	
 	public static void main(String[] args) {
 		System.out.println("Hi");
 		test(true);
