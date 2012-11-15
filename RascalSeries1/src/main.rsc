@@ -6,8 +6,9 @@ import util::ValueUI;
 import kevin::UnitLOC;
 
 public void main() {
-	//x = getProjectUnits(|project://HelloWorld|);
-	x = getProjectUnitInformation(|project://smallsql|);
+	x = getProjectUnitInformation(|project://HelloWorld|);
+	//x = getProjectUnitInformation(|project://smallsql|);
+	
 	
 	tloc = getLOCCount(x);
 	println("<tloc>");
