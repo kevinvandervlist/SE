@@ -9,7 +9,9 @@ public class Hello {
 		test(true);
 		test(false);
 		// Blaahaunthaonsuhaosu
-		TestTwo t = new TestTwo(1);
+		TestTwo 
+		t = 
+				new TestTwo(1);
 		System.out.println(t.getCnt());
 		System.out.println(t.getCnt(5));
 		
