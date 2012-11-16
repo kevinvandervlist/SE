@@ -1,5 +1,8 @@
 module kevin::CodeDuplication
 
-public void CodeDuplication(loc l) {
+import IO;
 
+public void CodeDuplication(loc l) {
+	// readFile(loc file);
+	// isFile(loc file	)
 }

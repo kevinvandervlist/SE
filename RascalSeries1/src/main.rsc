@@ -4,6 +4,7 @@ import IO;
 import util::ValueUI;
 
 import kevin::UnitLOC;
+import CyclomaticComplexity;
 
 import metrics::TotalLOC;
 import metrics::UnitLOC;
@@ -23,6 +24,7 @@ public void main() {
 	
 	// Complexity per unit: Liam.
 	// Do something
+	//getCyclomaticComplexity
 	
 	// Code duplication
 	// Do something as well
