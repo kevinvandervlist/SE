@@ -32,11 +32,11 @@ alias unit = tuple[	loc location,
 					list[int] LOCLines];
 
 private unit parseUnit(loc location, str name, AstNode body) {
-	lineset = {location.begin.line};
+	lineset = {location.begin.line, location.end.line};
 
 	visit(body) {
 		case AstNode a:
-			lineset += {a@location.begin.line};
+			lineset += {a@location.begin.line, a@location.end.line};
 	}
 	ll = sort(lineset);
 	return <location, name, size(ll), ll>; 
@@ -74,24 +74,24 @@ public classUnit getProjectUnitInformation(loc project) {
 		
 		visit(x) {
 			case p: packageDeclaration(_, _): 
-				classloc += {p@location.begin.line};
+				classloc += {p@location.begin.line, p@location.end.line};
 				
 			case i: importDeclaration(_, _, _): 
-				classloc += {i@location.begin.line};
+				classloc += {i@location.begin.line, i@location.end.line};
 			
 			case c: typeDeclaration(_, _, str class, str name, _, _, _, _): {
-				classloc += {c@location.begin.line};
+				classloc += {c@location.begin.line, c@location.end.line};
 				classname = name;
 			}
 			
 			case f: fieldDeclaration(_, _, t, _):
-				classloc += {t@location.begin.line};
+				classloc += {t@location.begin.line, t@location.end.line};
 				
 			case m: methodDeclaration(_, _, _, _, str name, _, _, some(body)):
 				units += parseUnit(m@location, name, body);
 			
 			case i: methodDeclaration(_, _, _, _, str name, _, _, none()): 
-				classloc += {i@location.begin.line};
+				classloc += {i@location.begin.line, i@location.end.line};
 		}
 		
 		s_classloc = sort(classloc);
