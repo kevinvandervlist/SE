@@ -1,0 +1,4 @@
+# Ignore everything in a bin subdir because it's compiled in ecplipse
+RascalSeries1/bin/*
+smallsql/bin/*
+HelloWorld/bin/*
