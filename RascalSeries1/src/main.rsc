@@ -3,11 +3,12 @@ module main
 import IO;
 import util::ValueUI;
 
-import kevin::UnitLOC;
-import CyclomaticComplexity;
+import kevin::UnitInformation;
+import Liam::CyclomaticComplexity;
 
 import metrics::TotalLOC;
 import metrics::UnitLOC;
+import metrics::CC;
 
 public void main() {
 	// Pick a project
@@ -24,7 +25,8 @@ public void main() {
 	
 	// Complexity per unit: Liam.
 	// Do something
-	//getCyclomaticComplexity
+	ret = evaluateUnitCCMetric(getCyclometicComplexityList(s_tree));
+	println("Cyclometic Complexity per unit: <ret>");
 	
 	// Code duplication
 	// Do something as well

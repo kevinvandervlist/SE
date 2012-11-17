@@ -1,4 +1,4 @@
-module kevin::UnitLOC
+module kevin::UnitInformation
 
 import IO;
 import lang::java::jdt::Java;
@@ -10,6 +10,8 @@ import Node;
 import Set;
 import List;
 
+import Liam::CyclomaticComplexity;
+
 /**
  * Return a tuple containing information for a certain Unit.
  * @param location The location of the unit
@@ -20,7 +22,7 @@ import List;
  * 
  * @return tuple[loc a, str b, int c, list[int] d]
  * Explanation:
- * a: The loc location of the unit in question. 
+ * a: The methodDeclaration of the unit in question 
  * b: The name of the unit.
  * c: The number of <i>actual</i> lines containing a statement in any way.
  * d: A list containing all the line numbers that contain at least one statement. 
@@ -28,18 +30,21 @@ import List;
  
 alias unit = tuple[	loc location, 
 					str name, 
-					int LOC, 
-					list[int] LOCLines];
+					int LOC,
+					list[int] LOCLines,
+					int CC];
 
-private unit parseUnit(loc location, str name, AstNode body) {
-	lineset = {location.begin.line, location.end.line};
+private unit parseUnit(AstNode method, str name, AstNode body) {
+	lineset = {method@location.begin.line, method@location.end.line};
+	
+	cc = getCyclomaticComplexity(method);
 
 	visit(body) {
 		case AstNode a:
 			lineset += {a@location.begin.line, a@location.end.line};
 	}
 	ll = sort(lineset);
-	return <location, name, size(ll), ll>; 
+	return <method@location, name, size(ll), ll, cc>; 
 }
 
 /* Return a set containing tuples of class information. 
@@ -59,7 +64,7 @@ private unit parseUnit(loc location, str name, AstNode body) {
  						list[int] classLOCLines, 
  						int totalLOC, 
  						int unitCount, 
- 						rel[loc location, str name, int LOC, list[int] LOCLines] units];
+ 						rel[loc location, str name, int LOC, list[int] LOCLines, int CC] units];
 
 public classUnit getProjectUnitInformation(loc project) {
 	asts = createAstsFromProject(project);
@@ -87,8 +92,8 @@ public classUnit getProjectUnitInformation(loc project) {
 			case f: fieldDeclaration(_, _, t, _):
 				classloc += {t@location.begin.line, t@location.end.line};
 				
-			case m: methodDeclaration(_, _, _, _, str name, _, _, some(body)):
-				units += parseUnit(m@location, name, body);
+			case m: methodDeclaration(_, _, _, _, str name, _, _, some(body)): 
+				units += parseUnit(m, name, body);
 			
 			case i: methodDeclaration(_, _, _, _, str name, _, _, none()): 
 				classloc += {i@location.begin.line, i@location.end.line};
@@ -130,4 +135,13 @@ public int getLOCCount(x) {
  */
 public list[int] getUnitSizeList(x) {
 	return [ u.LOC | z <- x<units>, u <- z];
+}
+
+/*
+ * Return a list consisting of all the cyclometic complexity of the units
+ * @param The project unit info
+ * @return list[int] with all CC numbers. 
+ */
+public list[int] getCyclometicComplexityList(x) {
+	return [ u.CC | z <- x<units>, u <- z];
 }
