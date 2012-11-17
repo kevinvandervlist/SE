@@ -1,5 +1,7 @@
 module metrics::UnitLOC
 
+import metrics::RelativeRanking;
+
 import util::Math;
 import List;
 
@@ -45,6 +47,8 @@ public str evaluateUnitLOCMetric(list[int] x) {
 	str g = "good: <distribution["Good"]>% [<rating["Good"]>]";
 	str n = "normal: <distribution["Normal"]>% [<rating["Normal"]>]";
 	str b = "bad: <distribution["Bad"]>% [<rating["Bad"]>]";
+	
+	str r = getRelativeRiskUnitLOC(distribution);
 							
-	return "<v>, <g>, <n>, <b>";
+	return "<r> \n\t[<v>, <g>, <n>, <b>]";
 }
