@@ -4,6 +4,7 @@ import IO;
 import util::ValueUI;
 
 import kevin::UnitInformation;
+import kevin::CodeDuplication;
 import Liam::CyclomaticComplexity;
 
 import metrics::TotalLOC;
@@ -24,13 +25,12 @@ public void main() {
 	println("Total lines of code: <ret>\n");
 	
 	// Complexity per unit: Liam.
-	// Do something
 	ret = evaluateUnitCCMetric(getCyclometicComplexityList(s_tree));
 	println("Cyclometic Complexity per unit: <ret>\n");
-	
+
 	// Code duplication
-	// Do something as well
-	
+	//ret = getCodeDuplication(p);
+
 	// Unit size
 	ret = evaluateUnitLOCMetric(getUnitSizeList(s_tree));
 	println("Lines of code per unit distribution: <ret>\n");
