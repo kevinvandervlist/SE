@@ -44,7 +44,7 @@ private unit parseUnit(AstNode method, str name, AstNode body) {
 			lineset += {a@location.begin.line, a@location.end.line};
 	}
 	ll = sort(lineset);
-	return <method@location, name, size(ll), ll, cc>; 
+	return <method@location, name, toInt(size(ll)), ll, cc>; 
 }
 
 /* Return a set containing tuples of class information. 
@@ -58,7 +58,7 @@ private unit parseUnit(AstNode method, str name, AstNode body) {
  * 7) set[units] - The set with the units in the file 
  */
  
- alias classUnit = rel[	str name, 
+alias classUnit = rel[	str name, 
  						loc location, 
  						int classLOC, 
  						list[int] classLOCLines, 
@@ -102,7 +102,7 @@ public classUnit getProjectUnitInformation(loc project) {
 		s_classloc = sort(classloc);
 		
 		// Create a sum of LOC of all units
-		unitsum = toInt(sum([ n | <_, _, int n, _> <- units]));
+		unitsum = toInt(sum([ n | <_, _, int n, _, _> <- units]));
 		
 		result = <	classname, 
 					x@location, 
