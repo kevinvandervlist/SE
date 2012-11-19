@@ -102,7 +102,8 @@ public classUnit getProjectUnitInformation(loc project) {
 		s_classloc = sort(classloc);
 		
 		// Create a sum of LOC of all units
-		unitsum = toInt(sum([ n | <_, _, int n, _, _> <- units]));
+		//unitsum = toInt(sum([ n | <_, _, int n, _, _> <- units]));
+		unitsum = toInt(sum([ n.LOC | n <- units]));
 		
 		result = <	classname, 
 					x@location, 
@@ -125,7 +126,8 @@ public classUnit getProjectUnitInformation(loc project) {
  */ 
 
 public int getLOCCount(x) {
-	return toInt(sum([ l,u | <_ , _, int l, _, int u, _, _> <- x]));
+	//return toInt(sum([ l,u | <_ , _, int l, _, int u, _, _> <- x]));
+	return toInt(sum([ n.totalLOC,n.classLOC | n <- x]));
 }
 
 /*
