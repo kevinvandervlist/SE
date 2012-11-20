@@ -16,6 +16,9 @@ public void main() {
 	p = |project://HelloWorld|;
 	//p = |project://smallsql|;
 
+	ret = getCodeDuplicationLineCount(p);
+	return;
+
 	println("Starting parsing of <p> ...\n");		
 	s_tree = getProjectUnitInformation(p);
 	
@@ -29,7 +32,7 @@ public void main() {
 	println("Cyclometic Complexity per unit: <ret>\n");
 
 	// Code duplication
-	//ret = getCodeDuplication(p);
+	ret = getCodeDuplicationLineCount(p);
 
 	// Unit size
 	ret = evaluateUnitLOCMetric(getUnitSizeList(s_tree));
