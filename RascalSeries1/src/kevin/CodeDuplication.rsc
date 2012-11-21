@@ -35,9 +35,12 @@ private bool getLineDepth(AstNode n, int depth) {
  */
 
 private int countLOC(AstNode n) {
-	return 1;
-	//return toInt(size(LOCLineset(n)));
+	return toInt(size(LOCLineset(n)));
 }
+
+/**
+ * Return a set of lines of code that are part of an AstNode.
+ */
 
 private set[int] LOCLineset(AstNode n) {
 	lineset = {n@location.begin.line, n@location.end.line};
@@ -49,37 +52,82 @@ private set[int] LOCLineset(AstNode n) {
 	return lineset;
 }
 
+/**
+ * Return whether a given node 'part' is part of a of the 
+ * 'full' tree/node.
+ */
+private bool partOf(AstNode full, AstNode part) {
+	return (/full := part) && (full != part);
+}
+
+/**
+ * Return whether a node 'part' is contained within a set of nodes 
+ */
+private bool partOfBlocks(set[AstNode] buf, AstNode part) {
+	for(x <- buf) {
+		if(partOf(x, part)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 /* 
  * Current issues: 'child' nodes of a duplicate still sufficing the depth contstraint still
  * are added to the duplicate collecion. Fixable with top-down visiting?
  * They do have to be removed though.
  */ 
 
-public int getCodeDuplicationLineCount(loc project) {
+public int getCodeDuplicationLineCount(loc project, int depth) {
 	asts = createAstsFromProject(project);
 	
 	map[AstNode, list[block]] codeblocks = ();
+	// A buffer to keep all visited nodes > depth to prevent inclusion of subnodes.
+	set[AstNode] buf = {};
 	
 	// Find nodes of the trees
 	for(x <- asts) {
 		//top-down-break visit(x) {
-		top-down visit(x) {
-			case AstNode a: if(getLineDepth(a, 6)) {
+		top-down-break visit(x) {
+			case AstNode a: if(getLineDepth(a, depth)) {
 				if(a in codeblocks) {
 					codeblocks[a] = codeblocks[a] + [<a@location, countLOC(a), a>];
 				} else {
-					// simple: if a not a subtree of buf:
+					// Obselete because of fail:
+					//if(!partOfBlocks(buf, a)) {
 					codeblocks[a] = [<a@location, countLOC(a), a>];
-					// Nice: if a not in a subtree of map:codeblocks:
-					// codeblocks[a] = [<a@location, countLOC(a), a>];
+					fail;
 				}
+				// Make sure to add the current node to the buffer of visited top nodes.
+			} else {
+				fail;
 			}
 		}
 	}
-	/* bool partof (AstNode full, AstNode part) = /full:=part*/
-	
-	// Filter the list to retain only duplicate nodes
+
+	// Filter the list to retain only duplicate nodes (e.g. have > 1 occurence).
 	list[list[block]] dups = [ codeblocks[k] | k <- codeblocks, size(codeblocks[k]) > 1];
+	
+	// Remove all nodes that are part of another node also in the list.
+	/*
+	println("Remove subtrees");
+	map[AstNode, int] sub = ();
+	for(x <- buf) {
+		if(partOfBlocks(buf, x)) {
+			sub[x] = 0;
+		}
+	}
+	println("End of subtrees");
+	dups = dups - sub;
+	*/
+	// Possibly remove the head of each of the dups.
+	// This is because you could argue that the first occurence is not a duplicate after all.
+	//dups = [ tail(x) | x <- dups];
+	
+	// Create a sum of LOC of all duplicate parts.
+	println("Total: <sum([ x.LOC | d <- dups, x <- d])>");
+	
+	
 	
 	///* Possibility: 
 	map[str filepath, set[int] lines] duplines = ();
