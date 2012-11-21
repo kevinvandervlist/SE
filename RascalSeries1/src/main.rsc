@@ -15,7 +15,8 @@ import metrics::Dup;
 public void main() {
 	// Pick a project
 	//p = |project://HelloWorld|;
-	p = |project://smallsql|;
+	//p = |project://smallsql|;
+	p = |project://SQLBig|;
 
 	println("Starting parsing of <p> ...\n");		
 	s_tree = getProjectUnitInformation(p);

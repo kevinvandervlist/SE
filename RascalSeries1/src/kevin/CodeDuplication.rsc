@@ -59,7 +59,6 @@ public int getCodeDuplicationLineCount(loc project) {
 	asts = createAstsFromProject(project);
 	
 	map[AstNode, list[block]] codeblocks = ();
-	set[AstNode] buf = {};
 	
 	// Find nodes of the trees
 	for(x <- asts) {
@@ -71,13 +70,13 @@ public int getCodeDuplicationLineCount(loc project) {
 				} else {
 					// simple: if a not a subtree of buf:
 					codeblocks[a] = [<a@location, countLOC(a), a>];
-					buf += a;
 					// Nice: if a not in a subtree of map:codeblocks:
 					// codeblocks[a] = [<a@location, countLOC(a), a>];
 				}
 			}
 		}
 	}
+	/* bool partof (AstNode full, AstNode part) = /full:=part*/
 	
 	// Filter the list to retain only duplicate nodes
 	list[list[block]] dups = [ codeblocks[k] | k <- codeblocks, size(codeblocks[k]) > 1];
