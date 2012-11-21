@@ -35,13 +35,18 @@ private bool getLineDepth(AstNode n, int depth) {
  */
 
 private int countLOC(AstNode n) {
+	return 1;
+	//return toInt(size(LOCLineset(n)));
+}
+
+private set[int] LOCLineset(AstNode n) {
 	lineset = {n@location.begin.line, n@location.end.line};
 	
 	visit(n) {
 		case AstNode a:
 			lineset += {a@location.begin.line, a@location.end.line};
 	}
-	return toInt(size(lineset));
+	return lineset;
 }
 
 /* 
@@ -77,9 +82,27 @@ public int getCodeDuplicationLineCount(loc project) {
 	// Filter the list to retain only duplicate nodes
 	list[list[block]] dups = [ codeblocks[k] | k <- codeblocks, size(codeblocks[k]) > 1];
 	
+	///* Possibility: 
+	map[str filepath, set[int] lines] duplines = ();
+	
+	for(d <- dups) {
+		for(b <- d) {
+			path = b.location.path;
+			if(path in duplines) {
+				duplines[path] = duplines[path] + LOCLineset(b.astnode); 			
+			} else {
+				duplines[path] = LOCLineset(b.astnode);
+			}
+		}
+	}
+	println(sum([ size(duplines[i]) | i <- duplines]));
+	//*/
 	// Create the total lines of duplicate code
 	// How do we count? Discuss with Liam
-	
+	for(d <- dups) {
+		l = [ i.LOC | i <- d];
+		// Substract the head?
+	}	
 	// Testing
 	for(d <- dups) {
 		sumloc = [ i.LOC | i <- d];

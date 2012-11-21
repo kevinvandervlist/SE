@@ -13,8 +13,8 @@ import metrics::CC;
 
 public void main() {
 	// Pick a project
-	p = |project://HelloWorld|;
-	//p = |project://smallsql|;
+	//p = |project://HelloWorld|;
+	p = |project://smallsql|;
 
 	ret = getCodeDuplicationLineCount(p);
 	return;
