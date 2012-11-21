@@ -5708,13 +5708,13 @@ public class jdbcDatabaseMetaData implements DatabaseMetaData {
 		return false;
 	}
 
-	@Override
+
 	public boolean generatedKeyAlwaysReturned() throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+
 	public ResultSet getPseudoColumns(String arg0, String arg1, String arg2,
 			String arg3) throws SQLException {
 		// TODO Auto-generated method stub

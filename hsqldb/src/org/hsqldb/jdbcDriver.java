@@ -324,7 +324,6 @@ public class jdbcDriver implements Driver {
         } catch (Exception e) {}
     }
 
-	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		// TODO Auto-generated method stub
 		return null;
