@@ -95,7 +95,7 @@ public int getCodeDuplicationLineCount(loc project) {
 			}
 		}
 	}
-	println(sum([ size(duplines[i]) | i <- duplines]));
+	temptot = sum([ size(duplines[i]) | i <- duplines]);
 	//*/
 	// Create the total lines of duplicate code
 	// How do we count? Discuss with Liam
@@ -110,5 +110,5 @@ public int getCodeDuplicationLineCount(loc project) {
 		println("[<size(d)>|(<sum(sumloc)>)]Dup: <info>");	
 	}
 	
-	return 1;
+	return toInt(temptot);
 }

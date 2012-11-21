@@ -10,14 +10,12 @@ import Liam::CyclomaticComplexity;
 import metrics::TotalLOC;
 import metrics::UnitLOC;
 import metrics::CC;
+import metrics::Dup;
 
 public void main() {
 	// Pick a project
 	//p = |project://HelloWorld|;
 	p = |project://smallsql|;
-
-	ret = getCodeDuplicationLineCount(p);
-	return;
 
 	println("Starting parsing of <p> ...\n");		
 	s_tree = getProjectUnitInformation(p);
@@ -32,7 +30,9 @@ public void main() {
 	println("Cyclometic Complexity per unit: <ret>\n");
 
 	// Code duplication
-	ret = getCodeDuplicationLineCount(p);
+	tdup = getCodeDuplicationLineCount(p);
+	ret = evaluateDupmetric(tdup, tloc);
+	println("Code duplication: <ret>\n");
 
 	// Unit size
 	ret = evaluateUnitLOCMetric(getUnitSizeList(s_tree));
