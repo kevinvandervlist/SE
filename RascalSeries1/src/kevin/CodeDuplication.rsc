@@ -82,23 +82,24 @@ public int getCodeDuplicationLineCount(loc project, int depth) {
 	asts = createAstsFromProject(project);
 	
 	map[AstNode, list[block]] codeblocks = ();
-	// A buffer to keep all visited nodes > depth to prevent inclusion of subnodes.
-	set[AstNode] buf = {};
 	
-	// Find nodes of the trees
+	/* Find nodes of the trees
+	 * Do a top-down-break, with failing.
+	 * This can done because at a certain level in the tree (started at the top), all subnodes of 
+	 * a match will always be a subtree, and therefore not interesting at all.
+	 * For a previous (manual way) of doing it, where subnodes were pruned at the end, see: 
+	 * https://github.com/kevinvandervlist/SE/commit/d15ba1c54f636df80ddb638b2228038ab622734f
+	 * This is WAAAAAAAAAAAY slower. 
+	 */
 	for(x <- asts) {
-		//top-down-break visit(x) {
 		top-down-break visit(x) {
 			case AstNode a: if(getLineDepth(a, depth)) {
 				if(a in codeblocks) {
 					codeblocks[a] = codeblocks[a] + [<a@location, countLOC(a), a>];
 				} else {
-					// Obselete because of fail:
-					//if(!partOfBlocks(buf, a)) {
 					codeblocks[a] = [<a@location, countLOC(a), a>];
 					fail;
 				}
-				// Make sure to add the current node to the buffer of visited top nodes.
 			} else {
 				fail;
 			}
@@ -108,54 +109,10 @@ public int getCodeDuplicationLineCount(loc project, int depth) {
 	// Filter the list to retain only duplicate nodes (e.g. have > 1 occurence).
 	list[list[block]] dups = [ codeblocks[k] | k <- codeblocks, size(codeblocks[k]) > 1];
 	
-	// Remove all nodes that are part of another node also in the list.
-	/*
-	println("Remove subtrees");
-	map[AstNode, int] sub = ();
-	for(x <- buf) {
-		if(partOfBlocks(buf, x)) {
-			sub[x] = 0;
-		}
-	}
-	println("End of subtrees");
-	dups = dups - sub;
-	*/
 	// Possibly remove the head of each of the dups.
 	// This is because you could argue that the first occurence is not a duplicate after all.
 	//dups = [ tail(x) | x <- dups];
 	
 	// Create a sum of LOC of all duplicate parts.
-	println("Total: <sum([ x.LOC | d <- dups, x <- d])>");
-	
-	
-	
-	///* Possibility: 
-	map[str filepath, set[int] lines] duplines = ();
-	
-	for(d <- dups) {
-		for(b <- d) {
-			path = b.location.path;
-			if(path in duplines) {
-				duplines[path] = duplines[path] + LOCLineset(b.astnode); 			
-			} else {
-				duplines[path] = LOCLineset(b.astnode);
-			}
-		}
-	}
-	temptot = sum([ size(duplines[i]) | i <- duplines]);
-	//*/
-	// Create the total lines of duplicate code
-	// How do we count? Discuss with Liam
-	for(d <- dups) {
-		l = [ i.LOC | i <- d];
-		// Substract the head?
-	}	
-	// Testing
-	for(d <- dups) {
-		sumloc = [ i.LOC | i <- d];
-		info = [<i.location, i.LOC> | i <- d ];
-		println("[<size(d)>|(<sum(sumloc)>)]Dup: <info>");	
-	}
-	
-	return toInt(temptot);
+	return toInt(sum([ x.LOC | d <- dups, x <- d]));
 }

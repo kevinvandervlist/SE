@@ -13,14 +13,14 @@ public str evaluateDupmetric(int dup, int tot) {
 	int bad = 20;
 	
 	if(percentage <= verygood) {
-		return "***** (5) [<percentage>]";
+		return "***** (5) [<percentage>% [<dup>]]";
 	} else if (percentage <= good) {
-		return "****  (4) [<percentage>]";
+		return "****  (4) [<percentage>% [<dup>]]";
 	} else if (percentage <= normal) {
-		return "***   (3) [<percentage>]";
+		return "***   (3) [<percentage>% [<dup>]]";
 	} else if (percentage <= bad) {
-		return "**    (2) [<percentage>]";
+		return "**    (2) [<percentage>% [<dup>]]";
 	} else {
-		return "*     (1) [<percentage>]";
+		return "*     (1) [<percentage>% [<dup>]]";
 	}
 }
