@@ -44,3 +44,5 @@ public rel[AstNode, int] getCyclomaticComplexitiesOfMethods(set[AstNode] nodes){
 	
 	return result;
 }
+
+//this is a test change
