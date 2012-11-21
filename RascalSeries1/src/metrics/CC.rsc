@@ -16,7 +16,7 @@ public str evaluateUnitCCMetric(list[int] x) {
 	int complex = 50;
 	
 	rating = ("simple": 0, "moderate": 0, "complex": 0, "untestable": 0);
-	t = toReal(size(x));
+	t = toInt(size(x));
 	
 	for(i <- x) {
 		if(i <= simple) {
