@@ -20,6 +20,8 @@ public int getCyclomaticComplexity(AstNode n){
 		case doStatement(_,_)			: cc += 1;
 		case catchClause(_,_)			: cc += 1;
 		case enhancedForStatement(_,_,_): cc += 1;
+		// Fix to align with SIG
+		case infixExpression(_, _, _, _): cc += 1;
 	};
 	
 	return cc;

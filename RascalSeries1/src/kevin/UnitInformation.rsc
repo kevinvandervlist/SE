@@ -37,6 +37,15 @@ alias unit = tuple[	loc location,
 private unit parseUnit(AstNode method, str name, AstNode body) {
 	lineset = {method@location.begin.line, method@location.end.line};
 	
+	f = readFileLines(method@location);
+	y = 0;
+	// Fix to align with SIG
+	for (x <- f) {
+		if(/^\s*(\{|\})\s*$/ := x) {
+			y+=1;
+		}
+	}
+		
 	cc = getCyclomaticComplexity(method);
 
 	visit(body) {
@@ -44,7 +53,8 @@ private unit parseUnit(AstNode method, str name, AstNode body) {
 			lineset += {a@location.begin.line, a@location.end.line};
 	}
 	ll = sort(lineset);
-	return <method@location, name, toInt(size(ll)), ll, cc>; 
+	t = toInt(size(ll));
+	return <method@location, name, t-y, [0], cc>; 
 }
 
 /* Return a set containing tuples of class information. 
@@ -95,8 +105,8 @@ public classUnit getProjectUnitInformation(loc project) {
 			case m: methodDeclaration(_, _, _, _, str name, _, _, some(body)): 
 				units += parseUnit(m, name, body);
 			
-			case i: methodDeclaration(_, _, _, _, str name, _, _, none()): 
-				classloc += {i@location.begin.line, i@location.end.line};
+			//case i: methodDeclaration(_, _, _, _, str name, _, _, none()): 
+			//	classloc += {i@location.begin.line, i@location.end.line};
 		}
 		
 		s_classloc = sort(classloc);
