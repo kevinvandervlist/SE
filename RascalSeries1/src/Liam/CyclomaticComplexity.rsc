@@ -13,12 +13,13 @@ public int getCyclomaticComplexity(AstNode n){
 	int cc = 1;
 	
 	visit(n){
-		case ifStatement(_, _, _) 	: cc += 1;
-		case forStatement(_,_,_,_)	: cc += 1;
-		case switchCase(false, _)	: cc += 1; //only when it is not the default case
-		case whileStatement(_,_)	: cc += 1;
-		//case continueStatement(_)	: cc += 1;
-		//case breakStatement(_)	: cc += 1;
+		case ifStatement(_, _, _) 		: cc += 1;
+		case forStatement(_,_,_,_)		: cc += 1;
+		case switchCase(false, _)		: cc += 1; //only when it is not the default case
+		case whileStatement(_,_)		: cc += 1;
+		case doStatement(_,_)			: cc += 1;
+		case catchClause(_,_)			: cc += 1;
+		case enhancedForStatement(_,_,_): cc += 1;
 	};
 	
 	return cc;
@@ -45,4 +46,16 @@ public rel[AstNode, int] getCyclomaticComplexitiesOfMethods(set[AstNode] nodes){
 	return result;
 }
 
-//this is a test change
+
+public rel[str, int] getCyclomaticComplexitiesOfMethodsNamesOnly(set[AstNode] nodes){
+	rel[str,int] result ={};
+	
+	for( n <- nodes){
+		visit(n){
+			case m:methodDeclaration(_, _, _, _,name, _, _, _) : 
+				result += <name, getCyclomaticComplexity(m)>; 
+		};
+	}
+	
+	return result;
+}
